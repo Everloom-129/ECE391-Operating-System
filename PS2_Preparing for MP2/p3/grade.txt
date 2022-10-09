@@ -1,0 +1,5 @@
+-1: accesing struct without lock line 43
+Grade: 17/18 
+Comments: Nice! 
+    You need threading setup, which is a bit complicated in C. If you come to OH I can show you 
+    -Okan 
