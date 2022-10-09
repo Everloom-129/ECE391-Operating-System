@@ -34,7 +34,7 @@ As part of MP2, you will also write a device driver for the Tux controller board
   - byte 0 - MTCP_ACK -- meaning succeed
   - if there's no signal, then the Opcode fail
   
-  ![P1](https://gitlab.engr.illinois.edu/ece391_fa22/ps2_ngao4/-/raw/master/p2/LED.png)
+  ![P1]( https://github.com/Everloom-129/ECE391-Operating-System/blob/main/PS2_Preparing%20for%20MP2/p2/LED.png?raw=true)
   
 ### Reference on the related signal:
 > 1. The exact value of signal is computed by the following macro instruction:
@@ -61,8 +61,9 @@ For each of the following messages sent from the Tux controller to the computer,
      - Generated when the ***Button Interrupt-on-change*** mode is enabled and a button is either pressed or released.
 
      - Packet format:
+     ![P2]( https://github.com/Everloom-129/ECE391-Operating-System/blob/main/PS2_Preparing%20for%20MP2/p2/MTCP_BIOC_EVENT.png?raw=true)
 
-          ![P2](https://gitlab.engr.illinois.edu/ece391_fa22/ps2_ngao4/-/raw/master/p2/MTCP_BIOC_EVENT.png)
+         
           
           Here, the signal is a packet consist of 3 bytes, first byte specifies the operand. Second and third byte convey the pushed button on the MTC.
 
