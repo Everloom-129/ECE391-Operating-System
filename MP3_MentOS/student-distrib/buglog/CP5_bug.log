@@ -1,0 +1,160 @@
+<=========================================================>
+<=================>    BUG LOG HEADER   <=================>
+<=========================================================>
+Assignment:
+    MP3
+CheckPoint:
+    CP5
+CreateTime:
+    2022.11.17
+
+# Final Checkpoint!
+
+## Target: 
+- [ ] Multiple terminal 
+- [ ] Scheduling
+
+<--------------------------------------------------------->
+                          BUG 0                          
+<--------------------------------------------------------->
+Time:
+    2022.11.19.
+Creator:
+    Tony Wang.
+Description:
+    Realized color output
+    Bug: colored output can't scolling -> the attribe behind it!.
+Solution:
+    TODO: Add a new scoll and printf function, to intergrate the color 
+
+
+
+<--------------------------------------------------------->
+                          BUG 1                          
+<--------------------------------------------------------->
+Time:
+    2022.11.27.
+Creator:
+    Tony Wang && Tim Zhao && Gabriel Gao && Jerry Wang.
+Description:
+    Succesfully realize multi_terminal without scheduling.
+    But when intergrate with scheduling, it will be page fault
+Solution:
+    The scheduling's new_pcb go to 0 with no reason, after changing
+    it to current_pcb_counter, there are no more page fault
+
+<--------------------------------------------------------->
+                          BUG 2                          
+<--------------------------------------------------------->
+Time:
+    2022.12.01.
+Creator:
+    Tony Wang && Tim Zhao && Gabriel Gao && Jerry Wang.
+Description:
+    The multi_terminal works, but the display items fails, 
+    they lost and the stuff in terminal 1 will be displayed 
+    on terminal 2
+Solution:
+    Tim add one line to fix this bug:
+    while (terminal[display_term].read_flag == 0 || running_term != display_term); // lock the terminal until the keyboard flag is set 1
+    then we can ignore the ansychronsis error
+
+
+<--------------------------------------------------------->
+                          BUG 3                          
+<--------------------------------------------------------->
+Time:
+    2022.12.01.
+Creator:
+    Tony Wang.
+Description:
+    Can't clear the standard screen of kernel .
+Solution:
+    The initialization sequence of all devices in kernel.c makes this trouble.
+    After choosing the correct sequence, it's fine
+
+    
+<--------------------------------------------------------->
+                          BUG 4                          
+<--------------------------------------------------------->
+Time:
+    2022.12.02.
+Creator:
+    Gabriel Gao
+Description:
+    The pingpong do not print the stuff as given frequency
+Solution:
+    When start the kernel, because of the previous checkpoint, I initilize the the rtc physical frequency into 2Hz.
+    However, in CP5, I implement RTC virtualization and initialize the RTC frequency into 1024Hz which is the acceptable 
+    highest frequency. I should delete the initialization of RTC to 2Hz in kernel.c 
+
+<--------------------------------------------------------->
+                          BUG 5                          
+<--------------------------------------------------------->
+Time:
+    2022.12.02.
+Creator:
+    Gabriel Gao
+Description:
+    PCB initialization method cannot support the multi_terminal.
+Solution:
+    Creating a member variable inside the terminal struct called task counter to replace the original global task counter.
+    Therefore, I can split the task into each terminal.
+
+<--------------------------------------------------------->
+                          BUG 6                          
+<--------------------------------------------------------->
+Time:
+    2022.12.01.
+Creator:
+    Jerry Wang && Gabriel Gao
+Description:
+    Possible cause of page fault due to not turning on user_supervisor mode
+Solution:
+    Turned on user_supervisor mode for both the video vidmap video page and the program image page. This 
+    ensures that both pages are set to user page so the user has the right to access it
+
+<--------------------------------------------------------->
+                          BUG 7                          
+<--------------------------------------------------------->
+Time:
+    2022.12.01.
+Creator:
+    Jerry Wang && Gabriel Gao
+Description:
+    - Wrong base address when mapping the program image
+    - I accidentally added the next pid * 4_MB to the kernel position (which was already shifted by 22)
+Solution:
+    - we can add the pid to the shifted kernel position directly, which is the same as adding pid * 4_MB 
+    shifted by 22
+
+<--------------------------------------------------------->
+                          BUG 8                          
+<--------------------------------------------------------->
+Time:
+    2022.12.01.
+Creator:
+    Gabriel Gao && Tony Wang
+Description:
+    When switching from user program needs to use rtc, i.e. pingpong, fish, counter,
+    The screen after switched will generate another extra 391OS>
+    Like this:
+391OS>391OS>
+    It may because the terminal_write meet problem in the scheduling
+Solution:
+    - Just adding a flag to constrain typing.
+
+
+<--------------------------------------------------------->
+                          BUG 9                      
+<--------------------------------------------------------->
+Time:
+    2022.12.02.
+Creator:
+    Jerry Wang.
+Description:
+    Some buggy behavior of multiterminal.It appears every time a program runs through a background terminal.
+    Like counter and pingpong.
+    Will not happen after finishing at the current terminal
+Solution:
+    Do  more condition check to avoid this problem

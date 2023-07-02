@@ -1,0 +1,154 @@
+<=========================================================>
+<=================>    BUG LOG HEADER   <=================>
+<=========================================================>
+Assignment:
+    MP3
+CheckPoint:
+    CP4
+CreateTime:
+    2022.11.08
+
+<--------------------------------------------------------->
+                          BUG 0                          
+<--------------------------------------------------------->
+Time:
+    2022.11.08.
+Creator:
+    Tony Wang.
+Description:
+    Double ls bug: The first time in shell to execute "ls" is fine. 
+    But Second time, the system can't read the file after verylargetextwithverylongname.tx
+    it will generate:
+... (correct ls)
+verylargetextwithverylongname.tx
+:-) ( a emoji like symbol) -> ASCII 0x2 text start 
+failed to read fd: 2562  /*a fixed value 2562 = 0x160 +2 ? */
+directory entry read failed
+program terminated abnoramally
+391OS>
+
+    This bug is detacted right before the ddl of CP3. And TA points it out. 
+Solution:
+    1. the smile symbol and fd 2562 is fixed, that may be the breakpoint
+    2. TA said in demo, this may because the system's parameter and return value doesn't fit
+    well with the userlevel syscall program. We should check that.
+        - Tony debug a datatype error, but nothing happens
+    3. We found this bug is related to BUG 2, ie. the boundary check failed in filesystem driver
+
+
+
+
+<--------------------------------------------------------->
+                          BUG 1                       
+<--------------------------------------------------------->
+Time:
+    2022.11.09
+Creator:
+    Tony Wang
+Description:
+    Our syscall can't handle test 4 and 5 in ece391syserr.c
+    It failed to pass, because
+    4: empty string
+    5: shouldn't close unopen fd
+Solution:
+    I modified the boundary check of sys_open and sys_close.
+    Put in correct return value, and it's fine now.
+
+<--------------------------------------------------------->
+                          BUG 2                          
+<--------------------------------------------------------->
+Time:
+    2022.11.09.
+Creator:
+    Gabriel Gao && Tim Zhao && Jerry Wang.
+Description:
+    Directory_read do not consider the nbytes relationship with the buffer length
+Solution:
+    Add the condition check to determine the correct copy length of the buffer after copying the data.
+
+
+<--------------------------------------------------------->
+                          BUG 3                          
+<--------------------------------------------------------->
+Time:
+    2022.11.10.
+Creator:
+    Jerry Wang && Tony Wang.
+Description:
+    vidmap: We finished and execute the vidmap by fish program
+    but there is no fish or any other thing displayed on the screen
+Solution:
+    1. no fish
+    2. all black
+    3. memset, white background, font number wrong <100>   
+    vidmap display method ?-> ASCII + COLOR 2BYTE
+symptom:
+tttttttt_____________
+________
+
+    In the end, this is the result of BUG 5 
+
+<--------------------------------------------------------->
+                          BUG 4                          
+<--------------------------------------------------------->
+Time:
+    2022.11.13.
+Creator:
+    Tony Wang.
+Description:
+    1. The keyboard can't deal with the edge case at (79,Y).
+    i.e. it will delete back
+    2. The user level program [pingpong] will display an extra
+    space line on the screen
+Solution:
+    After deleting useless structure in the handler, I gdb 
+    to find the lib.c's sequence is wrong, after switching
+    a conditon in putc_advanced, and return the putc to a 
+    pure case, it's fine now.
+
+
+<--------------------------------------------------------->
+                          BUG 5                          
+<--------------------------------------------------------->
+Time:
+    2022.11.14.
+Creator:
+    Tim Zhao.
+Description:
+    - an unnecessary memset caused a frame of the fish to 
+    mess up when displaying
+Solution:
+    - delete the memset and the frame displayed properly
+
+
+<--------------------------------------------------------->
+                          BUG 6                          
+<--------------------------------------------------------->
+Time:
+    2022.11.14.
+Creator:
+    Jerry Wang.
+Description:
+    - when error checking the vidmap address in vidmap, we
+    dereferenced the vidmap address instead of comparing the
+    address directly
+    - this caused vidmap to return immediately
+Solution:
+    - compare the vidmap address directly to solve the issue
+
+<--------------------------------------------------------->
+                          BUG 7                          
+<--------------------------------------------------------->
+Time:
+    2022.11.14.
+Creator:
+    Gabreil Gao.
+Description:
+    - change the structure of the pcb to support max 6 process.
+    page fault when modified the current pcb pointer(after halt)
+Solution:
+    - add a member element struct pcb* parent_pcb inside the pcb struct to track the parent
+    for halt program.
+
+ 
+
