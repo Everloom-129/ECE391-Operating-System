@@ -1,5 +1,18 @@
 # ECE 391 MP3 - Operating System -MentOS
+
+Gabriel, Tim, Tony, Jerry
+
 ==============================
+
+2022: ECE391: MentOS - Multi-terminal Operating System",
+- Developed a Linux-like OS kernel using C and x86, implementing core features like paging virtual memory, IDT, GDT, and i8259-based interrupt controller.
+- Implement device drivers for RTC, keyboard, PIT and a read-only file system. Established system call linkage between user and kernel space,
+- with support for single CPU task scheduling and multiple terminal switching. ⚙️
+
+technologies: ["C", "x86 Assembly", "Operating Systems"],
+
+    
+
 
 WARNING
 -------
